@@ -5,6 +5,63 @@
   <title>Proteus Monitor — VR Lab Dashboard</title>
   <meta name="description" content="ThingSpeak verilerini VR ortaminda gosteren lab paneli" />
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script>
+    // VR kumandasiyla yurume: sol analog = hareket (baktigin yone),
+    // sag analog saga/sola = ani donus (snap turn). Klavyede WASD calismaya devam eder.
+    AFRAME.registerComponent("thumbstick-locomotion", {
+      schema: { speed: { default: 2.5 }, turn: { default: 30 } },
+      init: function () {
+        this.leftAxis = { x: 0, y: 0 };
+        this.canTurn = true;
+        this.cameraEl = this.el.querySelector("[camera]");
+        this._dir = new THREE.Vector3();
+        this._right = new THREE.Vector3();
+        this._up = new THREE.Vector3(0, 1, 0);
+        this._move = new THREE.Vector3();
+        var self = this;
+
+        var left = document.getElementById("leftHand");
+        var right = document.getElementById("rightHand");
+
+        if (left) left.addEventListener("thumbstickmoved", function (e) {
+          self.leftAxis.x = e.detail.x; self.leftAxis.y = e.detail.y;
+        });
+        // sag analogla 30 derecelik adimlarla don (bir itiste bir kez)
+        if (right) right.addEventListener("thumbstickmoved", function (e) {
+          var x = e.detail.x;
+          if (Math.abs(x) < 0.6) { self.canTurn = true; return; }
+          if (!self.canTurn) return;
+          self.canTurn = false;
+          var dir = x > 0 ? -1 : 1;
+          self.el.object3D.rotation.y += dir * THREE.MathUtils.degToRad(self.data.turn);
+        });
+      },
+      tick: function (time, delta) {
+        var a = this.leftAxis;
+        if (Math.abs(a.x) < 0.15 && Math.abs(a.y) < 0.15) return; // olu bolge
+        var cam = this.cameraEl && this.cameraEl.object3D;
+        if (!cam) return;
+        var dt = (delta || 16) / 1000;
+
+        cam.getWorldDirection(this._dir);  // baktigin ileri yon
+        this._dir.y = 0;
+        if (this._dir.lengthSq() < 1e-4) return;
+        this._dir.normalize();
+        this._right.crossVectors(this._dir, this._up).normalize();
+
+        this._move.set(0, 0, 0);
+        this._move.addScaledVector(this._dir, -a.y);   // analog ileri = ileri
+        this._move.addScaledVector(this._right, a.x);  // analog yan = yana
+
+        if (this._move.lengthSq() > 1e-4) {
+          this._move.normalize().multiplyScalar(this.data.speed * dt);
+          var p = this.el.object3D.position;
+          p.x = Math.max(-5.5, Math.min(5.5, p.x + this._move.x)); // oda icinde kal
+          p.z = Math.max(-5.5, Math.min(5.5, p.z + this._move.z));
+        }
+      }
+    });
+  </script>
   <style>
     /* 2D ekranda (VR'a girmeden once) sol ustte kucuk bilgi kutusu */
     #hud {
@@ -305,10 +362,10 @@
     </a-entity>
 
     <!-- kamera: VR'da kafa takibi, masaustunde WASD + fare; VR kumandalari icin lazer -->
-    <a-entity position="0 0 1.6">
+    <a-entity position="0 0 1.6" thumbstick-locomotion>
       <a-camera wasd-controls="acceleration: 30" look-controls></a-camera>
-      <a-entity laser-controls="hand: right" raycaster="objects: .clickable"></a-entity>
-      <a-entity laser-controls="hand: left" raycaster="objects: .clickable"></a-entity>
+      <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable"></a-entity>
+      <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable"></a-entity>
     </a-entity>
   </a-scene>
 
