@@ -79,6 +79,15 @@
                  padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer;
                  background: #c62828; color: #fff; font-family: monospace; font-size: 14px;">
     Alarmi sustur</button>
+  <div id="lampControls"
+       style="position: fixed; bottom: 10px; left: 10px; z-index: 9999;
+              font-family: monospace; display: flex; gap: 6px; align-items: center;">
+    <span style="color:#9fb0d0; font-size:12px; margin-right:4px;">Lamba:</span>
+    <button id="htmlLampOn"  style="padding:8px 12px;border:none;border-radius:6px;cursor:pointer;background:#1f7a33;color:#fff;">Aç</button>
+    <button id="htmlLampOff" style="padding:8px 12px;border:none;border-radius:6px;cursor:pointer;background:#a33333;color:#fff;">Kapat</button>
+    <button id="htmlLampAuto" style="padding:8px 12px;border:none;border-radius:6px;cursor:pointer;background:#1c4a7a;color:#fff;">Otomatik</button>
+    <span id="lampHud" style="color:#5ef2c8; font-size:12px; margin-left:6px;"></span>
+  </div>
 
   <a-scene background="color: #070b14" renderer="antialias: true"
            fog="type: linear; color: #070b14; near: 10; far: 22"
@@ -351,6 +360,26 @@
     <a-text id="alarmTxt" value="!!! ALARM - SICAKLIK YUKSEK !!!" position="0 1.72 -4.4"
             align="center" color="#ff4040" width="8" visible="false"></a-text>
 
+    <!-- ====== LAMBA KONTROL PANELI (VR'dan fiziksel lambayi sur) ====== -->
+    <a-entity id="lampPanel" position="-4.0 1.3 -2.8" rotation="0 28 0">
+      <a-plane width="1.5" height="1.5" color="#0d1322" material="opacity: 0.92; transparent: true"></a-plane>
+      <a-plane width="1.5" height="0.34" position="0 0.58 0.005" color="#1c2a4a"></a-plane>
+      <a-text value="LAMBA KONTROL" position="0 0.58 0.02" align="center" color="#5ef2c8" width="2.7"></a-text>
+      <a-text value="(Battal Gazi)" position="0 0.33 0.02" align="center" color="#6b7a99" width="2"></a-text>
+
+      <a-plane id="lampOn" class="clickable" width="1.25" height="0.3" position="0 0.05 0.02"
+               material="color: #1f7a33; emissive: #1f7a33; emissiveIntensity: 0.2"></a-plane>
+      <a-text value="AC" position="0 0.05 0.04" align="center" color="#ffffff" width="3"></a-text>
+
+      <a-plane id="lampOff" class="clickable" width="1.25" height="0.3" position="0 -0.32 0.02"
+               material="color: #a33333; emissive: #a33333; emissiveIntensity: 0.2"></a-plane>
+      <a-text value="KAPAT" position="0 -0.32 0.04" align="center" color="#ffffff" width="3"></a-text>
+
+      <a-plane id="lampAuto" class="clickable" width="1.25" height="0.3" position="0 -0.69 0.02"
+               material="color: #1c4a7a; emissive: #1c4a7a; emissiveIntensity: 0.2"></a-plane>
+      <a-text value="OTOMATIK (sicaklik)" position="0 -0.69 0.04" align="center" color="#ffffff" width="2.4"></a-text>
+    </a-entity>
+
     <!-- alarm susturma butonu (masanin on kenarinda, tiklanabilir) -->
     <a-entity position="0.62 0.85 -2.45">
       <a-box id="muteBase" class="clickable" width="0.2" height="0.05" depth="0.2"
@@ -504,6 +533,28 @@
     document.getElementById("muteBtn").addEventListener("click", toggleMute);
     document.getElementById("muteBase").addEventListener("click", toggleMute);
     document.getElementById("muteHtmlBtn").addEventListener("click", toggleMute);
+
+    // ====== LAMBA KONTROL (VR butonu -> ntfy.sh -> Mac koprusu -> lamba) ======
+    const NTFY_TOPIC = "proteus-lab-lamp-bg42";
+    function lampCmd(cmd, btnId) {
+      fetch("https://ntfy.sh/" + NTFY_TOPIC, { method: "POST", body: cmd }).catch(function () {});
+      // gorsel geri bildirim: butonu kisa sure parlat
+      if (btnId) {
+        var b = document.getElementById(btnId);
+        if (b) { b.setAttribute("material", "emissiveIntensity", 0.9);
+          setTimeout(function () { b.setAttribute("material", "emissiveIntensity", 0.2); }, 250); }
+      }
+      var hud = document.getElementById("lampHud");
+      if (hud) { hud.textContent = "Lamba komutu: " + cmd.toUpperCase();
+        setTimeout(function () { hud.textContent = ""; }, 2000); }
+    }
+    document.getElementById("lampOn").addEventListener("click", function () { lampCmd("on", "lampOn"); });
+    document.getElementById("lampOff").addEventListener("click", function () { lampCmd("off", "lampOff"); });
+    document.getElementById("lampAuto").addEventListener("click", function () { lampCmd("auto", "lampAuto"); });
+    // ekran ustu HTML butonlari (telefon/masaustu)
+    document.getElementById("htmlLampOn").addEventListener("click", function () { lampCmd("on"); });
+    document.getElementById("htmlLampOff").addEventListener("click", function () { lampCmd("off"); });
+    document.getElementById("htmlLampAuto").addEventListener("click", function () { lampCmd("auto"); });
 
     // karo doseme dokusunu bir kez ciz
     function drawFloor() {
