@@ -89,60 +89,59 @@
     <span id="lampHud" style="color:#5ef2c8; font-size:12px; margin-left:6px;"></span>
   </div>
 
-  <a-scene background="color: #070b14" renderer="antialias: true"
-           fog="type: linear; color: #070b14; near: 10; far: 22"
+  <a-scene background="color: #c9ced6" renderer="antialias: true; colorManagement: true"
+           fog="type: linear; color: #c9ced6; near: 14; far: 26"
            cursor="rayOrigin: mouse" raycaster="objects: .clickable">
     <a-assets>
       <canvas id="chartCanvas" width="1024" height="512"></canvas>
       <canvas id="floorCanvas" width="512" height="512"></canvas>
     </a-assets>
 
-    <!-- ====== ODA KABUGU ====== -->
-    <!-- karo doseme (canvas dokusu) -->
-    <a-plane rotation="-90 0 0" width="12" height="12"
-             material="src: #floorCanvas; repeat: 3 3; roughness: 0.85"></a-plane>
-    <!-- tavan -->
-    <a-plane rotation="90 0 0" position="0 4 0" width="12" height="12" color="#141a28"></a-plane>
-    <!-- duvarlar: alt lambri + ust duvar iki tonlu -->
-    <a-plane position="0 2.6 -6"  width="12" height="2.8" color="#26314e"></a-plane>
-    <a-plane position="0 0.6 -6"  width="12" height="1.2" color="#1a2237"></a-plane>
-    <a-box   position="0 1.22 -5.985" width="12" height="0.06" depth="0.03" color="#3d4d77"></a-box>
+    <!-- ====== ODA KABUGU (gercek elektronik laboratuvari) ====== -->
+    <!-- gri beton doseme -->
+    <a-plane rotation="-90 0 0" width="12" height="14"
+             material="src: #floorCanvas; repeat: 3 3.5; roughness: 0.6; metalness: 0.15"></a-plane>
+    <!-- beyaz asma tavan -->
+    <a-plane rotation="90 0 0" position="0 4 0" width="12" height="14" color="#eef0f3"></a-plane>
+    <!-- beyaz duvarlar -->
+    <a-plane position="0 2 -7"  width="12" height="4" color="#edeff3"></a-plane>
+    <a-plane position="0 2 7" rotation="0 180 0" width="12" height="4" color="#e9ebf0"></a-plane>
+    <a-plane position="-6 2 0" rotation="0 90 0" width="14" height="4" color="#e6e8ed"></a-plane>
+    <a-plane position="6 2 0" rotation="0 -90 0" width="14" height="4" color="#e6e8ed"></a-plane>
+    <!-- koyu sup/etek (taban birlesimi) -->
+    <a-box position="0 0.05 -6.97" width="12" height="0.1" depth="0.04" color="#3a3f47"></a-box>
+    <a-box position="0 0.05 6.97" width="12" height="0.1" depth="0.04" color="#3a3f47"></a-box>
+    <a-box position="-5.97 0.05 0" rotation="0 90 0" width="14" height="0.1" depth="0.04" color="#3a3f47"></a-box>
+    <a-box position="5.97 0.05 0" rotation="0 90 0" width="14" height="0.1" depth="0.04" color="#3a3f47"></a-box>
 
-    <a-plane position="0 2.6 6" rotation="0 180 0" width="12" height="2.8" color="#26314e"></a-plane>
-    <a-plane position="0 0.6 6" rotation="0 180 0" width="12" height="1.2" color="#1a2237"></a-plane>
-    <a-box   position="0 1.22 5.985" width="12" height="0.06" depth="0.03" color="#3d4d77"></a-box>
+    <!-- ====== TAVAN: GOMME LED ISIK TEPSILERI + hoparlor/klima ====== -->
+    <a-box position="-3 3.96 0" width="0.45" height="0.04" depth="11" material="color:#ffffff; emissive:#ffffff; emissiveIntensity:0.95"></a-box>
+    <a-box position="0 3.96 0"  width="0.45" height="0.04" depth="11" material="color:#ffffff; emissive:#ffffff; emissiveIntensity:0.95"></a-box>
+    <a-box position="3 3.96 0"  width="0.45" height="0.04" depth="11" material="color:#ffffff; emissive:#ffffff; emissiveIntensity:0.95"></a-box>
+    <!-- yuvarlak tavan hoparlorleri -->
+    <a-cylinder position="-1.5 3.97 -3" radius="0.22" height="0.02" color="#f4f5f7"></a-cylinder>
+    <a-cylinder position="1.5 3.97 2" radius="0.22" height="0.02" color="#f4f5f7"></a-cylinder>
+    <!-- klima kaseti -->
+    <a-box position="2.5 3.95 -4" width="1.1" height="0.05" depth="1.1" color="#dfe2e7"></a-box>
+    <a-box position="2.5 3.94 -4" width="0.85" height="0.04" depth="0.85" color="#c2c7cf"></a-box>
 
-    <a-plane position="-6 2.6 0" rotation="0 90 0" width="12" height="2.8" color="#222c46"></a-plane>
-    <a-plane position="-6 0.6 0" rotation="0 90 0" width="12" height="1.2" color="#182032"></a-plane>
-    <a-box   position="-5.985 1.22 0" rotation="0 90 0" width="12" height="0.06" depth="0.03" color="#3d4d77"></a-box>
+    <!-- ====== ISIKLAR (parlak floresan lab) ====== -->
+    <a-light type="ambient" id="ambLight" color="#cfd6e2" intensity="0.9"></a-light>
+    <a-light type="point" position="-3 3.7 -2" intensity="0.45" distance="13" color="#ffffff"></a-light>
+    <a-light type="point" position="3 3.7 2"   intensity="0.45" distance="13" color="#ffffff"></a-light>
+    <a-light type="point" position="0 3.7 0"   intensity="0.4"  distance="13" color="#ffffff"></a-light>
+    <a-light type="directional" position="1 4 1" intensity="0.25" color="#ffffff"></a-light>
 
-    <a-plane position="6 2.6 0" rotation="0 -90 0" width="12" height="2.8" color="#222c46"></a-plane>
-    <a-plane position="6 0.6 0" rotation="0 -90 0" width="12" height="1.2" color="#182032"></a-plane>
-    <a-box   position="5.985 1.22 0" rotation="0 -90 0" width="12" height="0.06" depth="0.03" color="#3d4d77"></a-box>
-
-    <!-- ====== TAVAN AYDINLATMASI (emissive paneller + isiklar) ====== -->
-    <a-box position="-2.5 3.97 -2.5" width="1.8" height="0.05" depth="0.7"
-           material="color: #eef3ff; emissive: #dce8ff; emissiveIntensity: 1"></a-box>
-    <a-box position="2.5 3.97 -2.5" width="1.8" height="0.05" depth="0.7"
-           material="color: #eef3ff; emissive: #dce8ff; emissiveIntensity: 1"></a-box>
-    <a-box position="-2.5 3.97 2.5" width="1.8" height="0.05" depth="0.7"
-           material="color: #eef3ff; emissive: #dce8ff; emissiveIntensity: 1"></a-box>
-    <a-box position="2.5 3.97 2.5" width="1.8" height="0.05" depth="0.7"
-           material="color: #eef3ff; emissive: #dce8ff; emissiveIntensity: 1"></a-box>
-
-    <a-light type="ambient" id="ambLight" color="#7e8db0" intensity="0.55"></a-light>
-    <a-light type="point" position="0 3.6 -2.5" intensity="0.65" distance="11" color="#f2f6ff"></a-light>
-    <a-light type="point" position="0 3.6 2.5"  intensity="0.5"  distance="11" color="#f2f6ff"></a-light>
-    <a-light type="point" position="0 2.4 -5"   intensity="0.35" distance="7"  color="#9fc1ff"></a-light>
-
-    <!-- ====== BASLIK TABELASI ====== -->
-    <a-box position="0 3.45 -5.93" width="6.4" height="0.55" depth="0.05" color="#0d1322"></a-box>
-    <a-text value="PROTEUS LAB  -  CANLI ORTAM IZLEME" position="0 3.45 -5.89" align="center"
+    <!-- ====== ON DUVAR: IZLEME PANOSU (Proteus dashboard) ====== -->
+    <a-box position="0 3.45 -6.93" width="6.6" height="0.55" depth="0.05" color="#11161f"></a-box>
+    <a-text value="PROTEUS LAB  -  CANLI ORTAM IZLEME" position="0 3.45 -6.88" align="center"
             color="#5ef2c8" width="9"></a-text>
 
-    <!-- ====== VERI PANELLERI (on duvarda) ====== -->
+    <!-- buyuk siyah pano cercevesi -->
+    <a-box position="0 2.25 -6.95" width="8.2" height="2.3" depth="0.06" color="#0c1018"></a-box>
+
     <!-- SICAKLIK -->
-    <a-entity position="-2.6 2.25 -5.9">
+    <a-entity position="-2.6 2.25 -6.9">
       <a-plane width="2.3" height="1.7" color="#ffb703"
                material="emissive: #ffb703; emissiveIntensity: 0.25"></a-plane>
       <a-plane width="2.2" height="1.6" position="0 0 0.01" color="#101a30"></a-plane>
@@ -153,7 +152,7 @@
     </a-entity>
 
     <!-- NEM -->
-    <a-entity position="0 2.25 -5.9">
+    <a-entity position="0 2.25 -6.9">
       <a-plane width="2.3" height="1.7" color="#48cae4"
                material="emissive: #48cae4; emissiveIntensity: 0.25"></a-plane>
       <a-plane width="2.2" height="1.6" position="0 0 0.01" color="#101a30"></a-plane>
@@ -164,7 +163,7 @@
     </a-entity>
 
     <!-- BASINC -->
-    <a-entity position="2.6 2.25 -5.9">
+    <a-entity position="2.6 2.25 -6.9">
       <a-plane width="2.3" height="1.7" color="#b5e48c"
                material="emissive: #b5e48c; emissiveIntensity: 0.25"></a-plane>
       <a-plane width="2.2" height="1.6" position="0 0 0.01" color="#101a30"></a-plane>
@@ -174,95 +173,51 @@
       <a-text value="hPa" position="0 -0.6 0.03" align="center" color="#6b7a99" width="3"></a-text>
     </a-entity>
 
-    <!-- durum satiri (panellerin altindaki bant) -->
-    <a-box position="0 1.18 -5.93" width="7.6" height="0.3" depth="0.04" color="#0d1322"></a-box>
+    <!-- durum satiri -->
+    <a-box position="0 1.05 -6.93" width="7.6" height="0.3" depth="0.04" color="#0d1322"></a-box>
     <a-text id="statusTxt" value="ThingSpeak verisi bekleniyor..."
-            position="0 1.18 -5.89" align="center" color="#90a0c0" width="4.6" wrap-count="70"></a-text>
+            position="0 1.05 -6.89" align="center" color="#90a0c0" width="4.6" wrap-count="70"></a-text>
 
-    <!-- ====== LAB TEZGAHI (on duvar boyunca) ====== -->
-    <a-box position="0 0.92 -5.3" width="9" height="0.09" depth="1.1" color="#46557a"
-           material="roughness: 0.35; metalness: 0.25"></a-box>
-    <a-box position="0 0.45 -5.3" width="8.9" height="0.85" depth="1.0" color="#202a44"></a-box>
-    <!-- dolap kapaklari -->
-    <a-plane position="-3.2 0.45 -4.79" width="1.9" height="0.7" color="#283659"></a-plane>
-    <a-plane position="-1.1 0.45 -4.79" width="1.9" height="0.7" color="#283659"></a-plane>
-    <a-plane position="1.1 0.45 -4.79"  width="1.9" height="0.7" color="#283659"></a-plane>
-    <a-plane position="3.2 0.45 -4.79"  width="1.9" height="0.7" color="#283659"></a-plane>
+    <!-- beyaz tahta (on duvar, sag) -->
+    <a-box position="4.7 2.3 -6.92" width="2.0" height="1.3" depth="0.04" color="#fbfcfe"></a-box>
+    <a-box position="4.7 2.3 -6.93" width="2.1" height="1.4" depth="0.03" color="#aab1bd"></a-box>
+    <a-text value="LAB NOTLARI:\n- BME280 @ 0x76\n- ThingSpeak 2606541\n- 2.4 GHz WiFi" position="4.7 2.4 -6.89"
+            align="center" color="#2a3854" width="2.6"></a-text>
 
-    <!-- erlenmayer: cam koni + sivi + boyun -->
-    <a-entity position="-3.4 0.97 -5.25">
-      <a-cone radius-bottom="0.16" radius-top="0.05" height="0.3" position="0 0.15 0"
-              material="color: #bfe3ff; opacity: 0.32; transparent: true"></a-cone>
-      <a-cone radius-bottom="0.13" radius-top="0.045" height="0.14" position="0 0.075 0"
-              material="color: #37d67a; opacity: 0.75; transparent: true; emissive: #37d67a; emissiveIntensity: 0.3"></a-cone>
-      <a-cylinder radius="0.045" height="0.12" position="0 0.36 0"
-                  material="color: #bfe3ff; opacity: 0.32; transparent: true"></a-cylinder>
-    </a-entity>
+    <!-- ====== MERKEZ ADA TEZGAHI: PROTEUS ISTASYONU (back-to-back) ====== -->
+    <!-- beyaz tezgah ustu -->
+    <a-box position="0 0.9 -2.8" width="3.0" height="0.06" depth="1.5" color="#f4f6f9"
+           material="roughness: 0.4"></a-box>
+    <!-- siyah govde/cekmece -->
+    <a-box position="0 0.45 -2.8" width="2.9" height="0.82" depth="1.35" color="#23262c"></a-box>
+    <!-- siyah ayaklar -->
+    <a-box position="-1.4 0.45 -2.2" width="0.07" height="0.9" depth="0.07" color="#15171b"></a-box>
+    <a-box position="1.4 0.45 -2.2"  width="0.07" height="0.9" depth="0.07" color="#15171b"></a-box>
+    <a-box position="-1.4 0.45 -3.4" width="0.07" height="0.9" depth="0.07" color="#15171b"></a-box>
+    <a-box position="1.4 0.45 -3.4"  width="0.07" height="0.9" depth="0.07" color="#15171b"></a-box>
+    <!-- ortadaki siyah dikey bolme (back-to-back monitor ayraci) -->
+    <a-box position="0 1.25 -3.05" width="2.7" height="0.62" depth="0.05" color="#1a1c21"></a-box>
 
-    <!-- beher: cam silindir + mavi sivi -->
-    <a-entity position="-2.6 0.97 -5.35">
-      <a-cylinder radius="0.11" height="0.26" position="0 0.13 0"
-                  material="color: #cfe8ff; opacity: 0.28; transparent: true"></a-cylinder>
-      <a-cylinder radius="0.095" height="0.13" position="0 0.07 0"
-                  material="color: #3aa5ff; opacity: 0.7; transparent: true; emissive: #3aa5ff; emissiveIntensity: 0.25"></a-cylinder>
-    </a-entity>
+    <!-- arka tarafa bakan siyah monitorler (ada gorunumu) -->
+    <a-box position="-0.7 1.2 -3.22" width="0.62" height="0.38" depth="0.04" color="#15171c"></a-box>
+    <a-box position="0.7 1.2 -3.22"  width="0.62" height="0.38" depth="0.04" color="#15171c"></a-box>
 
-    <!-- deney tupu rafi -->
-    <a-entity position="-1.7 0.97 -5.3">
-      <a-box width="0.42" height="0.04" depth="0.14" position="0 0.02 0" color="#5a4632"></a-box>
-      <a-box width="0.42" height="0.04" depth="0.14" position="0 0.2 0" color="#5a4632"></a-box>
-      <a-box width="0.04" height="0.2" depth="0.14" position="-0.19 0.11 0" color="#5a4632"></a-box>
-      <a-box width="0.04" height="0.2" depth="0.14" position="0.19 0.11 0" color="#5a4632"></a-box>
-      <a-cylinder radius="0.022" height="0.18" position="-0.1 0.16 0"
-                  material="color: #ff5d8f; opacity: 0.65; transparent: true"></a-cylinder>
-      <a-cylinder radius="0.022" height="0.18" position="0 0.16 0"
-                  material="color: #ffd166; opacity: 0.65; transparent: true"></a-cylinder>
-      <a-cylinder radius="0.022" height="0.18" position="0.1 0.16 0"
-                  material="color: #8ecae6; opacity: 0.65; transparent: true"></a-cylinder>
-    </a-entity>
-
-    <!-- mikroskop (stilize) -->
-    <a-entity position="2.4 0.97 -5.3">
-      <a-cylinder radius="0.13" height="0.04" position="0 0.02 0" color="#2f3a55"></a-cylinder>
-      <a-box width="0.06" height="0.3" depth="0.06" position="0 0.18 -0.05" rotation="15 0 0" color="#3d4d77"></a-box>
-      <a-cylinder radius="0.035" height="0.18" position="0 0.32 0.02" rotation="25 0 0" color="#202a44"></a-cylinder>
-      <a-box width="0.14" height="0.02" depth="0.14" position="0 0.16 0.04" color="#2f3a55"></a-box>
-    </a-entity>
-
-    <!-- buchner sisesi (buyuk cam kavanoz) -->
-    <a-entity position="3.5 0.97 -5.25">
-      <a-cylinder radius="0.14" height="0.34" position="0 0.17 0"
-                  material="color: #d8f0ff; opacity: 0.25; transparent: true"></a-cylinder>
-      <a-cylinder radius="0.12" height="0.2" position="0 0.1 0"
-                  material="color: #b07cf7; opacity: 0.6; transparent: true; emissive: #b07cf7; emissiveIntensity: 0.25"></a-cylinder>
-      <a-cylinder radius="0.05" height="0.07" position="0 0.37 0" color="#2f3a55"></a-cylinder>
-    </a-entity>
-
-    <!-- ====== ORTA MASA: ARDUINO DUZENEGI + MONITOR ====== -->
-    <a-box position="0 0.78 -2.8" width="3.2" height="0.07" depth="1.3" color="#4d5b80"
-           material="roughness: 0.3; metalness: 0.3"></a-box>
-    <a-cylinder position="-1.4 0.39 -2.45" radius="0.04" height="0.78" color="#2a3349"></a-cylinder>
-    <a-cylinder position="1.4 0.39 -2.45"  radius="0.04" height="0.78" color="#2a3349"></a-cylinder>
-    <a-cylinder position="-1.4 0.39 -3.15" radius="0.04" height="0.78" color="#2a3349"></a-cylinder>
-    <a-cylinder position="1.4 0.39 -3.15"  radius="0.04" height="0.78" color="#2a3349"></a-cylinder>
-
-    <!-- arduino karti + breadboard + sensor -->
-    <a-box position="-0.75 0.85 -2.7" width="0.42" height="0.05" depth="0.3" color="#1f7a33"></a-box>
-    <a-box position="-0.62 0.89 -2.62" width="0.1" height="0.04" depth="0.08" color="#c0c8d8"></a-box>
-    <a-box position="-0.25 0.85 -2.75" width="0.34" height="0.06" depth="0.22" color="#e8eaf0"></a-box>
-    <a-box position="-0.25 0.9 -2.75" width="0.07" height="0.04" depth="0.07" color="#b13bb1"></a-box>
-    <!-- jumper kablolar -->
-    <a-cylinder position="-0.5 0.87 -2.72" rotation="0 0 90" radius="0.008" height="0.22" color="#ff5d5d"></a-cylinder>
-    <a-cylinder position="-0.5 0.885 -2.69" rotation="0 0 90" radius="0.008" height="0.22" color="#ffd166"></a-cylinder>
-    <a-cylinder position="-0.5 0.9 -2.74" rotation="0 0 90" radius="0.008" height="0.22" color="#48cae4"></a-cylinder>
+    <!-- arduino karti + breadboard + sensor (kullaniciya bakan yuz) -->
+    <a-box position="-0.75 0.96 -2.55" width="0.42" height="0.05" depth="0.3" color="#1f7a33"></a-box>
+    <a-box position="-0.62 1.00 -2.47" width="0.1" height="0.04" depth="0.08" color="#c0c8d8"></a-box>
+    <a-box position="-0.25 0.96 -2.6" width="0.34" height="0.06" depth="0.22" color="#e8eaf0"></a-box>
+    <a-box position="-0.25 1.01 -2.6" width="0.07" height="0.04" depth="0.07" color="#b13bb1"></a-box>
+    <a-cylinder position="-0.5 0.98 -2.57" rotation="0 0 90" radius="0.008" height="0.22" color="#ff5d5d"></a-cylinder>
+    <a-cylinder position="-0.5 0.995 -2.54" rotation="0 0 90" radius="0.008" height="0.22" color="#ffd166"></a-cylinder>
+    <a-cylinder position="-0.5 1.01 -2.59" rotation="0 0 90" radius="0.008" height="0.22" color="#48cae4"></a-cylinder>
 
     <!-- kucuk LCD modulu -->
-    <a-box position="0.35 0.9 -2.85" width="0.65" height="0.25" depth="0.05" rotation="-12 0 0" color="#0e2438"></a-box>
-    <a-text id="miniLcd" value="--.- C  --%" position="0.35 0.9 -2.82" rotation="-12 0 0"
+    <a-box position="0.35 1.01 -2.7" width="0.65" height="0.25" depth="0.05" rotation="-12 0 0" color="#0e2438"></a-box>
+    <a-text id="miniLcd" value="--.- C  --%" position="0.35 1.01 -2.67" rotation="-12 0 0"
             align="center" color="#7CFC00" width="1.5"></a-text>
 
-    <!-- masaustu monitor: durum ekrani -->
-    <a-entity position="1.05 1.2 -3.0" rotation="0 -14 0">
+    <!-- Proteus durum monitoru (kullaniciya bakan) -->
+    <a-entity position="1.0 1.3 -2.85" rotation="0 -16 0">
       <a-box width="0.78" height="0.5" depth="0.04" color="#11151f"></a-box>
       <a-plane id="pcScreen" width="0.7" height="0.42" position="0 0 0.025" color="#04121e"
                material="emissive: #0a2a40; emissiveIntensity: 0.6"></a-plane>
@@ -271,73 +226,153 @@
       <a-cylinder radius="0.035" height="0.16" position="0 -0.32 0" color="#2a3349"></a-cylinder>
       <a-box width="0.3" height="0.02" depth="0.18" position="0 -0.4 0" color="#2a3349"></a-box>
     </a-entity>
+    <!-- klavye -->
+    <a-box position="0.2 0.94 -2.35" width="0.5" height="0.02" depth="0.18" color="#1a1c21"></a-box>
 
-    <!-- ====== SOL DUVAR: BUYUK GRAFIK EKRANI ====== -->
-    <a-box position="-5.93 2.1 0" rotation="0 90 0" width="4.3" height="2.3" depth="0.06" color="#0d1322"></a-box>
-    <a-plane id="chartPlane" position="-5.88 2.1 0" rotation="0 90 0" width="4" height="2"
+    <!-- alarm susturma butonu (tezgah on kenari) -->
+    <a-entity position="-1.1 0.93 -2.3">
+      <a-box id="muteBase" class="clickable" width="0.2" height="0.05" depth="0.2"
+             position="0 0.02 0" color="#39455f"></a-box>
+      <a-cylinder id="muteBtn" class="clickable" radius="0.06" height="0.05" position="0 0.07 0"
+                  material="color: #a33333; emissive: #a33333; emissiveIntensity: 0.1"></a-cylinder>
+      <a-text id="muteLbl" value="ALARM SUSTUR" position="0 0.04 0.12" rotation="-35 0 0"
+              align="center" color="#1a2433" width="1.4"></a-text>
+    </a-entity>
+
+    <!-- ====== SOL DUVAR TEZGAHI + RAFLAR + EKIPMAN ====== -->
+    <a-box position="-5.4 0.9 0" rotation="0 90 0" width="11" height="0.06" depth="1.0" color="#f4f6f9"></a-box>
+    <a-box position="-5.45 0.45 0" rotation="0 90 0" width="11" height="0.82" depth="0.9" color="#f0f1f4"></a-box>
+    <!-- ust raflar (beyaz, askili) -->
+    <a-box position="-5.6 1.65 0" rotation="0 90 0" width="11" height="0.04" depth="0.4" color="#f4f5f8"></a-box>
+    <a-box position="-5.6 2.05 0" rotation="0 90 0" width="11" height="0.04" depth="0.4" color="#f4f5f8"></a-box>
+    <!-- ust dolaplar -->
+    <a-box position="-5.78 2.7 -2.5" rotation="0 90 0" width="4" height="0.85" depth="0.35" color="#f2f3f6"></a-box>
+    <a-box position="-5.78 2.7 2.5"  rotation="0 90 0" width="4" height="0.85" depth="0.35" color="#f2f3f6"></a-box>
+
+    <!-- sol tezgah ekipmani: osiloskop + guc kaynagi + monitor (kume) -->
+    <a-entity position="-5.0 0.93 -3.2">
+      <a-box width="0.55" height="0.34" depth="0.42" color="#c7c9cd"></a-box>
+      <a-plane position="0 0.05 0.215" width="0.32" height="0.22" material="color:#06231f; emissive:#0bf0c0; emissiveIntensity:0.25"></a-plane>
+    </a-entity>
+    <a-entity position="-5.0 0.93 -1.8">
+      <a-box width="0.5" height="0.28" depth="0.42" color="#cfd1d5"></a-box>
+      <a-plane position="0 0.04 0.215" width="0.18" height="0.1" material="color:#220a0a; emissive:#ff5a3c; emissiveIntensity:0.3"></a-plane>
+    </a-entity>
+    <!-- sol monitorler -->
+    <a-box position="-5.15 1.25 0.2" rotation="0 90 0" width="0.62" height="0.38" depth="0.04" color="#15171c"></a-box>
+    <a-box position="-5.15 1.25 1.6" rotation="0 90 0" width="0.62" height="0.38" depth="0.04" color="#15171c"></a-box>
+
+    <!-- sol duvar: BUYUK GRAFIK EKRANI -->
+    <a-box position="-5.9 2.85 3.2" rotation="0 90 0" width="3.4" height="1.0" depth="0.06" color="#0d1322"></a-box>
+    <a-plane id="chartPlane" position="-5.86 2.85 3.2" rotation="0 90 0" width="3.2" height="0.85"
              material="src: #chartCanvas; shader: flat"></a-plane>
-    <a-text value="VERI GECMISI" position="-5.87 3.4 0" rotation="0 90 0" align="center"
-            color="#5ef2c8" width="5"></a-text>
 
-    <!-- ====== SAG DUVAR: BEYAZ TAHTA + RAFLAR ====== -->
-    <a-box position="5.94 2.2 -2.2" rotation="0 -90 0" width="2.6" height="1.6" depth="0.05" color="#cfd6e4"></a-box>
-    <a-text value="LAB NOTLARI:\n- BME280 @ 0x76\n- ThingSpeak ch 2606541\n- 2.4 GHz WiFi!" position="5.9 2.35 -2.2"
-            rotation="0 -90 0" align="center" color="#2a3854" width="2.6"></a-text>
+    <!-- ====== SAG DUVAR TEZGAHI + RAFLAR + EKIPMAN ====== -->
+    <a-box position="5.4 0.9 1.5" rotation="0 -90 0" width="8" height="0.06" depth="1.0" color="#f4f6f9"></a-box>
+    <a-box position="5.45 0.45 1.5" rotation="0 -90 0" width="8" height="0.82" depth="0.9" color="#f0f1f4"></a-box>
+    <a-box position="5.6 1.65 1.5" rotation="0 -90 0" width="8" height="0.04" depth="0.4" color="#f4f5f8"></a-box>
+    <a-box position="5.6 2.05 1.5" rotation="0 -90 0" width="8" height="0.04" depth="0.4" color="#f4f5f8"></a-box>
+    <a-box position="5.78 2.7 1.5" rotation="0 -90 0" width="6" height="0.85" depth="0.35" color="#f2f3f6"></a-box>
 
-    <!-- raflar + renkli siseler -->
-    <a-box position="5.9 2.6 1.8" rotation="0 -90 0" width="2.8" height="0.05" depth="0.32" color="#3d4d77"></a-box>
-    <a-box position="5.9 1.8 1.8" rotation="0 -90 0" width="2.8" height="0.05" depth="0.32" color="#3d4d77"></a-box>
-    <a-cylinder position="5.85 2.78 1.0" radius="0.07" height="0.26" material="color: #ffb703; opacity: 0.75; transparent: true"></a-cylinder>
-    <a-cylinder position="5.85 2.78 1.5" radius="0.06" height="0.3"  material="color: #37d67a; opacity: 0.75; transparent: true"></a-cylinder>
-    <a-cylinder position="5.85 2.78 2.0" radius="0.08" height="0.22" material="color: #ff5d8f; opacity: 0.75; transparent: true"></a-cylinder>
-    <a-cylinder position="5.85 2.78 2.5" radius="0.055" height="0.28" material="color: #48cae4; opacity: 0.75; transparent: true"></a-cylinder>
-    <a-box position="5.85 1.95 1.2" rotation="0 -90 0" width="0.22" height="0.26" depth="0.22" color="#b07cf7"></a-box>
-    <a-box position="5.85 1.95 1.7" rotation="0 -90 0" width="0.3" height="0.2" depth="0.2" color="#2f3a55"></a-box>
-    <a-cylinder position="5.85 1.92 2.3" radius="0.09" height="0.18" material="color: #d8f0ff; opacity: 0.3; transparent: true"></a-cylinder>
+    <!-- sag ekipman -->
+    <a-entity position="5.0 0.93 3.0">
+      <a-box width="0.55" height="0.34" depth="0.42" color="#c7c9cd"></a-box>
+      <a-plane position="0 0.05 -0.215" rotation="0 180 0" width="0.32" height="0.22" material="color:#06231f; emissive:#0bf0c0; emissiveIntensity:0.25"></a-plane>
+    </a-entity>
+    <a-box position="5.15 1.25 0.4" rotation="0 -90 0" width="0.62" height="0.38" depth="0.04" color="#15171c"></a-box>
+    <a-box position="5.15 1.25 3.6" rotation="0 -90 0" width="0.62" height="0.38" depth="0.04" color="#15171c"></a-box>
 
-    <!-- ====== ARKA DUVAR: KAPI + UYARI ====== -->
-    <a-box position="1.8 1.25 5.95" width="1.1" height="2.5" depth="0.06" color="#33415f"></a-box>
-    <a-sphere position="1.42 1.2 5.9" radius="0.035" color="#c9d4ea"></a-sphere>
-    <a-box position="-1.5 2.3 5.95" width="1.5" height="1.0" depth="0.04" color="#f4d35e"></a-box>
-    <a-text value="DIKKAT\nDENEY ALANI" position="-1.5 2.3 5.92" rotation="0 180 0" align="center"
-            color="#1a2237" width="3"></a-text>
+    <!-- MAVI KOMPONENT CEKMECE DOLABI (sag on kose, fotograftan) -->
+    <a-box position="5.7 1.35 -4.5" rotation="0 -90 0" width="1.5" height="2.5" depth="0.45" color="#1d3a8f"></a-box>
+    <a-box position="5.7 0.1 -4.5" rotation="0 -90 0" width="1.5" height="0.2" depth="0.5" color="#16285f"></a-box>
+    <!-- cekmece izgarasi -->
+    <a-box position="5.46 2.1 -4.1" width="0.34" height="0.18" depth="0.02" color="#cdd6ea"></a-box>
+    <a-box position="5.46 2.1 -4.5" width="0.34" height="0.18" depth="0.02" color="#cdd6ea"></a-box>
+    <a-box position="5.46 2.1 -4.9" width="0.34" height="0.18" depth="0.02" color="#cdd6ea"></a-box>
+    <a-box position="5.46 1.85 -4.1" width="0.34" height="0.18" depth="0.02" color="#cdd6ea"></a-box>
+    <a-box position="5.46 1.85 -4.5" width="0.34" height="0.18" depth="0.02" color="#cdd6ea"></a-box>
+    <a-box position="5.46 1.85 -4.9" width="0.34" height="0.18" depth="0.02" color="#cdd6ea"></a-box>
+    <a-box position="5.46 1.6 -4.1" width="0.34" height="0.18" depth="0.02" color="#cdd6ea"></a-box>
+    <a-box position="5.46 1.6 -4.5" width="0.34" height="0.18" depth="0.02" color="#cdd6ea"></a-box>
+    <a-box position="5.46 1.6 -4.9" width="0.34" height="0.18" depth="0.02" color="#cdd6ea"></a-box>
+    <a-box position="5.46 1.35 -4.1" width="0.34" height="0.18" depth="0.02" color="#cdd6ea"></a-box>
+    <a-box position="5.46 1.35 -4.5" width="0.34" height="0.18" depth="0.02" color="#cdd6ea"></a-box>
+    <a-box position="5.46 1.35 -4.9" width="0.34" height="0.18" depth="0.02" color="#cdd6ea"></a-box>
 
-    <!-- ====== 3D GOSTERGE ISTASYONU (sag on kose) ====== -->
-    <!-- gosterge masasi -->
-    <a-box position="3.85 0.88 -2.2" width="1.9" height="0.06" depth="0.9" color="#46557a"
-           material="roughness: 0.35; metalness: 0.25"></a-box>
-    <a-box position="3.85 0.44 -2.2" width="1.8" height="0.82" depth="0.8" color="#202a44"></a-box>
-    <a-text value="GOSTERGELER" position="3.85 1.95 -2.2" align="center" color="#5ef2c8" width="3.2"></a-text>
+    <!-- ====== SIYAH LAB TABURELERI (krom ayakli) ====== -->
+    <a-entity position="-0.8 0 -1.5">
+      <a-cylinder position="0 0.62 0" radius="0.21" height="0.07" color="#1a1a1a"></a-cylinder>
+      <a-box position="0 0.85 -0.18" width="0.38" height="0.3" depth="0.05" color="#1a1a1a"></a-box>
+      <a-cylinder position="0 0.4 0" radius="0.028" height="0.45" color="#3a3a3a"></a-cylinder>
+      <a-torus position="0 0.3 0" radius="0.17" radius-tubular="0.012" rotation="90 0 0" color="#aab0b8"></a-torus>
+      <a-cylinder position="0 0.05 0" radius="0.26" height="0.03" color="#c4c8ce"></a-cylinder>
+    </a-entity>
+    <a-entity position="0.9 0 -1.4" rotation="0 -25 0">
+      <a-cylinder position="0 0.62 0" radius="0.21" height="0.07" color="#1a1a1a"></a-cylinder>
+      <a-box position="0 0.85 -0.18" width="0.38" height="0.3" depth="0.05" color="#1a1a1a"></a-box>
+      <a-cylinder position="0 0.4 0" radius="0.028" height="0.45" color="#3a3a3a"></a-cylinder>
+      <a-torus position="0 0.3 0" radius="0.17" radius-tubular="0.012" rotation="90 0 0" color="#aab0b8"></a-torus>
+      <a-cylinder position="0 0.05 0" radius="0.26" height="0.03" color="#c4c8ce"></a-cylinder>
+    </a-entity>
+    <a-entity position="-4.2 0 -1.0" rotation="0 70 0">
+      <a-cylinder position="0 0.62 0" radius="0.21" height="0.07" color="#1a1a1a"></a-cylinder>
+      <a-box position="0 0.85 -0.18" width="0.38" height="0.3" depth="0.05" color="#1a1a1a"></a-box>
+      <a-cylinder position="0 0.4 0" radius="0.028" height="0.45" color="#3a3a3a"></a-cylinder>
+      <a-torus position="0 0.3 0" radius="0.17" radius-tubular="0.012" rotation="90 0 0" color="#aab0b8"></a-torus>
+      <a-cylinder position="0 0.05 0" radius="0.26" height="0.03" color="#c4c8ce"></a-cylinder>
+    </a-entity>
+    <a-entity position="-4.2 0 1.6" rotation="0 95 0">
+      <a-cylinder position="0 0.62 0" radius="0.21" height="0.07" color="#1a1a1a"></a-cylinder>
+      <a-box position="0 0.85 -0.18" width="0.38" height="0.3" depth="0.05" color="#1a1a1a"></a-box>
+      <a-cylinder position="0 0.4 0" radius="0.028" height="0.45" color="#3a3a3a"></a-cylinder>
+      <a-torus position="0 0.3 0" radius="0.17" radius-tubular="0.012" rotation="90 0 0" color="#aab0b8"></a-torus>
+      <a-cylinder position="0 0.05 0" radius="0.26" height="0.03" color="#c4c8ce"></a-cylinder>
+    </a-entity>
+    <a-entity position="4.1 0 2.4" rotation="0 -100 0">
+      <a-cylinder position="0 0.62 0" radius="0.21" height="0.07" color="#1a1a1a"></a-cylinder>
+      <a-box position="0 0.85 -0.18" width="0.38" height="0.3" depth="0.05" color="#1a1a1a"></a-box>
+      <a-cylinder position="0 0.4 0" radius="0.028" height="0.45" color="#3a3a3a"></a-cylinder>
+      <a-torus position="0 0.3 0" radius="0.17" radius-tubular="0.012" rotation="90 0 0" color="#aab0b8"></a-torus>
+      <a-cylinder position="0 0.05 0" radius="0.26" height="0.03" color="#c4c8ce"></a-cylinder>
+    </a-entity>
 
-    <!-- termometre: cam tup + yukselen kirmizi sutun -->
-    <a-entity position="3.25 0.91 -2.1">
+    <!-- karton kutu (yerde, fotograftan detay) -->
+    <a-box position="3.4 0.25 4.2" width="0.7" height="0.5" depth="0.55" color="#b9925a"></a-box>
+    <a-box position="3.4 0.51 4.2" width="0.68" height="0.04" depth="0.18" rotation="0 0 0" color="#a07d48"></a-box>
+
+    <!-- ====== 3D GOSTERGE ISTASYONU (sag, bir tezgah ustunde) ====== -->
+    <a-box position="3.9 0.9 -2.0" width="1.9" height="0.06" depth="0.95" color="#f4f6f9"></a-box>
+    <a-box position="3.9 0.45 -2.0" width="1.8" height="0.82" depth="0.85" color="#23262c"></a-box>
+    <a-text value="GOSTERGELER" position="3.9 1.95 -2.0" align="center" color="#1c4a7a" width="3.2"></a-text>
+
+    <!-- termometre -->
+    <a-entity position="3.3 0.93 -1.9">
       <a-sphere radius="0.08" position="0 0.08 0"
                 material="color: #ff3b30; emissive: #ff3b30; emissiveIntensity: 0.45"></a-sphere>
       <a-cylinder radius="0.04" height="0.78" position="0 0.52 0"
                   material="color: #cfe8ff; opacity: 0.22; transparent: true; depthWrite: false"></a-cylinder>
       <a-cylinder id="thermoCol" radius="0.024" height="0.02" position="0 0.15 0"
                   material="color: #ff3b30; emissive: #ff3b30; emissiveIntensity: 0.5"></a-cylinder>
-      <!-- olcek cizgileri: 10 / 20 / 30 / 40 C -->
-      <a-box position="0.06 0.32 0" width="0.05" height="0.008" depth="0.008" color="#c9d4ea"></a-box>
-      <a-box position="0.06 0.50 0" width="0.05" height="0.008" depth="0.008" color="#c9d4ea"></a-box>
-      <a-box position="0.06 0.68 0" width="0.05" height="0.008" depth="0.008" color="#c9d4ea"></a-box>
-      <a-box position="0.06 0.86 0" width="0.05" height="0.008" depth="0.008" color="#c9d4ea"></a-box>
-      <a-text id="thermoTxt" value="--" position="0.13 0.6 0" align="left" color="#ffb703" width="1.6"></a-text>
+      <a-box position="0.06 0.32 0" width="0.05" height="0.008" depth="0.008" color="#5a606a"></a-box>
+      <a-box position="0.06 0.50 0" width="0.05" height="0.008" depth="0.008" color="#5a606a"></a-box>
+      <a-box position="0.06 0.68 0" width="0.05" height="0.008" depth="0.008" color="#5a606a"></a-box>
+      <a-box position="0.06 0.86 0" width="0.05" height="0.008" depth="0.008" color="#5a606a"></a-box>
+      <a-text id="thermoTxt" value="--" position="0.13 0.6 0" align="left" color="#d68a00" width="1.6"></a-text>
     </a-entity>
 
-    <!-- nem tanki: doluluk seviyesi = % nem -->
-    <a-entity position="3.85 0.91 -2.3">
+    <!-- nem tanki -->
+    <a-entity position="3.9 0.93 -2.1">
       <a-cylinder radius="0.14" height="0.55" position="0 0.275 0"
                   material="color: #d8f0ff; opacity: 0.2; transparent: true; depthWrite: false"></a-cylinder>
       <a-cylinder radius="0.15" height="0.02" position="0 0 0" color="#2f3a55"></a-cylinder>
       <a-cylinder radius="0.15" height="0.02" position="0 0.55 0" color="#2f3a55"></a-cylinder>
       <a-cylinder id="humLiquid" radius="0.12" height="0.02" position="0 0.02 0"
                   material="color: #36b5e0; opacity: 0.8; transparent: true; emissive: #36b5e0; emissiveIntensity: 0.3"></a-cylinder>
-      <a-text id="humTxt" value="--" position="0.2 0.3 0" align="left" color="#48cae4" width="1.6"></a-text>
+      <a-text id="humTxt" value="--" position="0.2 0.3 0" align="left" color="#1c84a8" width="1.6"></a-text>
     </a-entity>
 
-    <!-- basinc saati: ibreli kadran (980-1040 hPa) -->
-    <a-entity position="4.45 1.35 -2.1">
+    <!-- basinc saati -->
+    <a-entity position="4.5 1.37 -1.9">
       <a-box width="0.05" height="0.42" depth="0.04" position="0 -0.31 0" color="#2f3a55"></a-box>
       <a-circle radius="0.28" material="color: #0d1322"></a-circle>
       <a-ring radius-inner="0.27" radius-outer="0.3" color="#b5e48c"></a-ring>
@@ -351,21 +386,21 @@
     </a-entity>
 
     <!-- ====== ALARM SIRENI (tavan) + UYARI YAZISI ====== -->
-    <a-entity position="0 3.85 -3.5">
+    <a-entity position="0 3.9 -3.5">
       <a-cylinder radius="0.13" height="0.06" color="#2f3a55"></a-cylinder>
       <a-sphere id="sirenDome" radius="0.11" theta-length="90" position="0 -0.02 0" rotation="180 0 0"
                 material="color: #ff2222; emissive: #ff2222; emissiveIntensity: 0.12; opacity: 0.85; transparent: true"></a-sphere>
       <a-light id="sirenLight" type="point" intensity="0" distance="10" color="#ff3030" position="0 -0.2 0"></a-light>
     </a-entity>
-    <a-text id="alarmTxt" value="!!! ALARM - SICAKLIK YUKSEK !!!" position="0 1.72 -4.4"
+    <a-text id="alarmTxt" value="!!! ALARM - SICAKLIK YUKSEK !!!" position="0 1.72 -5.0"
             align="center" color="#ff4040" width="8" visible="false"></a-text>
 
     <!-- ====== LAMBA KONTROL PANELI (VR'dan fiziksel lambayi sur) ====== -->
-    <a-entity id="lampPanel" position="-4.0 1.3 -2.8" rotation="0 28 0">
-      <a-plane width="1.5" height="1.5" color="#0d1322" material="opacity: 0.92; transparent: true"></a-plane>
+    <a-entity id="lampPanel" position="-3.7 1.45 -2.6" rotation="0 32 0">
+      <a-plane width="1.5" height="1.5" color="#0d1322" material="opacity: 0.94; transparent: true"></a-plane>
       <a-plane width="1.5" height="0.34" position="0 0.58 0.005" color="#1c2a4a"></a-plane>
       <a-text value="LAMBA KONTROL" position="0 0.58 0.02" align="center" color="#5ef2c8" width="2.7"></a-text>
-      <a-text value="(Battal Gazi)" position="0 0.33 0.02" align="center" color="#6b7a99" width="2"></a-text>
+      <a-text value="(Masa Lambasi)" position="0 0.33 0.02" align="center" color="#8a93a5" width="2"></a-text>
 
       <a-plane id="lampOn" class="clickable" width="1.25" height="0.3" position="0 0.05 0.02"
                material="color: #1f7a33; emissive: #1f7a33; emissiveIntensity: 0.2"></a-plane>
@@ -380,15 +415,10 @@
       <a-text value="OTOMATIK (sicaklik)" position="0 -0.69 0.04" align="center" color="#ffffff" width="2.4"></a-text>
     </a-entity>
 
-    <!-- alarm susturma butonu (masanin on kenarinda, tiklanabilir) -->
-    <a-entity position="0.62 0.85 -2.45">
-      <a-box id="muteBase" class="clickable" width="0.2" height="0.05" depth="0.2"
-             position="0 0.02 0" color="#39455f"></a-box>
-      <a-cylinder id="muteBtn" class="clickable" radius="0.06" height="0.05" position="0 0.07 0"
-                  material="color: #a33333; emissive: #a33333; emissiveIntensity: 0.1"></a-cylinder>
-      <a-text id="muteLbl" value="ALARM SUSTUR" position="0 0.04 0.12" rotation="-35 0 0"
-              align="center" color="#c9d4ea" width="1.4"></a-text>
-    </a-entity>
+    <!-- kapi (arka duvar) -->
+    <a-box position="2.2 1.05 6.95" width="1.1" height="2.1" depth="0.06" color="#d7dbe2"></a-box>
+    <a-box position="2.2 1.05 6.9" width="1.0" height="2.0" depth="0.02" color="#c6ccd5"></a-box>
+    <a-sphere position="1.85 1.0 6.88" radius="0.035" color="#3a3f47"></a-sphere>
 
     <!-- kamera: VR'da kafa takibi, masaustunde WASD + fare; VR kumandalari icin lazer -->
     <a-entity position="0 0 1.6" thumbstick-locomotion>
@@ -416,12 +446,12 @@
       document.getElementById(id).setAttribute("value", value);
     }
 
-    // sicakliga gore ortam isigi: serin=mavi, normal=notr, sicak=turuncu/kirmizi
+    // sicakliga gore ortam isigi: serin=mavi, normal=parlak notr, sicak=turuncu/kirmizi
     function moodColor(t) {
-      if (t <= 18) return "#6d93e8";
-      if (t <= 24) return "#7e8db0";
-      if (t <= 28) return "#c79b6a";
-      return "#d4705f";
+      if (t <= 18) return "#9fb6e0";
+      if (t <= 24) return "#d3dae6";
+      if (t <= 28) return "#e3c79e";
+      return "#e09a85";
     }
 
     function fmtAge(created) {
@@ -434,7 +464,6 @@
 
     // ====== 3D GOSTERGELER ======
     function updateGauges(t, h, p) {
-      // termometre: 0-40 C -> 0-0.72 m sutun
       const tc = Math.min(Math.max(t, 0), 40);
       const th = Math.max(0.02, (tc / 40) * 0.72);
       const col = document.getElementById("thermoCol");
@@ -442,14 +471,12 @@
       col.setAttribute("position", `0 ${(0.14 + th / 2).toFixed(3)} 0`);
       setText("thermoTxt", t.toFixed(1) + " C");
 
-      // nem tanki: %0-100 -> 0-0.5 m doluluk
       const hh = Math.max(0.02, (Math.min(h, 100) / 100) * 0.5);
       const liq = document.getElementById("humLiquid");
       liq.setAttribute("height", hh);
       liq.setAttribute("position", `0 ${(0.02 + hh / 2).toFixed(3)} 0`);
       setText("humTxt", h.toFixed(0) + " %");
 
-      // basinc saati: 980-1040 hPa -> +120..-120 derece ibre
       const pc = Math.min(Math.max(p, 980), 1040);
       const rot = 120 - ((pc - 980) / 60) * 240;
       document.getElementById("presNeedle").setAttribute("rotation", `0 0 ${rot.toFixed(1)}`);
@@ -463,12 +490,12 @@
     function beep(freq) {
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === "suspended") return; // ilk tiklamada acilir
+        if (audioCtx.state === "suspended") return;
         const o = audioCtx.createOscillator(), g = audioCtx.createGain();
         o.type = "square"; o.frequency.value = freq;
         g.gain.value = 0.04; o.connect(g); g.connect(audioCtx.destination);
         o.start(); o.stop(audioCtx.currentTime + 0.18);
-      } catch (e) { /* ses olmazsa gorsel alarm yeter */ }
+      } catch (e) {}
     }
     document.addEventListener("click", () => {
       if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
@@ -480,7 +507,6 @@
       document.getElementById("alarmTxt").setAttribute("visible", false);
     }
 
-    // buton ve HTML dugmesinin gorunumunu duruma gore guncelle
     function applyMuteVisual() {
       const btn = document.getElementById("muteBtn");
       btn.setAttribute("material", alarmMuted
@@ -494,17 +520,16 @@
       hb.style.background = alarmMuted ? "#2e7d32" : "#c62828";
     }
 
-    // odanin isigini mevcut duruma gore ayarla
     function refreshAmbient() {
       if (lastTemp === null) return;
       const loud = alarmActive && !alarmMuted;
       const amb = document.getElementById("ambLight");
       amb.setAttribute("color", loud ? "#e0392b" : moodColor(lastTemp));
-      amb.setAttribute("intensity", loud ? 0.75 : 0.55);
+      amb.setAttribute("intensity", loud ? 0.9 : 0.9);
     }
 
     function toggleMute() {
-      if (!alarmActive) return; // alarm yokken butonun isi yok
+      if (!alarmActive) return;
       alarmMuted = !alarmMuted;
       if (alarmMuted) silenceSiren();
       applyMuteVisual();
@@ -514,12 +539,11 @@
     function setAlarm(on) {
       if (alarmActive === on) { applyMuteVisual(); return; }
       alarmActive = on;
-      if (!on) { alarmMuted = false; silenceSiren(); } // alarm bitince susturma sifirlanir
+      if (!on) { alarmMuted = false; silenceSiren(); }
       document.getElementById("alarmTxt").setAttribute("visible", on && !alarmMuted);
       applyMuteVisual();
     }
 
-    // siren yanip sonme dongusu (alarm aktif ve susturulmamisken 0.5 sn'de bir)
     setInterval(() => {
       if (!alarmActive || alarmMuted) return;
       sirenPhase = !sirenPhase;
@@ -529,7 +553,6 @@
       beep(sirenPhase ? 880 : 660);
     }, 500);
 
-    // tiklama baglantilari: sahnedeki buton + ekran kosesindeki dugme
     document.getElementById("muteBtn").addEventListener("click", toggleMute);
     document.getElementById("muteBase").addEventListener("click", toggleMute);
     document.getElementById("muteHtmlBtn").addEventListener("click", toggleMute);
@@ -538,7 +561,6 @@
     const NTFY_TOPIC = "proteus-lab-lamp-bg42";
     function lampCmd(cmd, btnId) {
       fetch("https://ntfy.sh/" + NTFY_TOPIC, { method: "POST", body: cmd }).catch(function () {});
-      // gorsel geri bildirim: butonu kisa sure parlat
       if (btnId) {
         var b = document.getElementById(btnId);
         if (b) { b.setAttribute("material", "emissiveIntensity", 0.9);
@@ -551,22 +573,20 @@
     document.getElementById("lampOn").addEventListener("click", function () { lampCmd("on", "lampOn"); });
     document.getElementById("lampOff").addEventListener("click", function () { lampCmd("off", "lampOff"); });
     document.getElementById("lampAuto").addEventListener("click", function () { lampCmd("auto", "lampAuto"); });
-    // ekran ustu HTML butonlari (telefon/masaustu)
     document.getElementById("htmlLampOn").addEventListener("click", function () { lampCmd("on"); });
     document.getElementById("htmlLampOff").addEventListener("click", function () { lampCmd("off"); });
     document.getElementById("htmlLampAuto").addEventListener("click", function () { lampCmd("auto"); });
 
-    // karo doseme dokusunu bir kez ciz
+    // gri beton doseme dokusu
     function drawFloor() {
       const cv = document.getElementById("floorCanvas");
       const ctx = cv.getContext("2d");
-      const N = 8, S = cv.width / N;
+      const N = 4, S = cv.width / N;
       for (let i = 0; i < N; i++) {
         for (let j = 0; j < N; j++) {
-          const even = (i + j) % 2 === 0;
-          ctx.fillStyle = even ? "#222b42" : "#1b2336";
+          ctx.fillStyle = (i + j) % 2 === 0 ? "#bcc0c7" : "#b4b8bf";
           ctx.fillRect(i * S, j * S, S, S);
-          ctx.strokeStyle = "#141a2a"; ctx.lineWidth = 3;
+          ctx.strokeStyle = "#9da1a9"; ctx.lineWidth = 2;
           ctx.strokeRect(i * S, j * S, S, S);
         }
       }
@@ -592,7 +612,7 @@
         updateGauges(t, h, p);
         lastTemp = t;
         setAlarm(t >= TEMP_ALARM);
-        refreshAmbient(); // alarm varken oda kirmizi, susturulduysa/normaldeyse sicaklik tonu
+        refreshAmbient();
 
         document.getElementById("hud").textContent =
           `Sicaklik: ${t.toFixed(1)} C\nNem:      ${h.toFixed(1)} %\nBasinc:   ${p.toFixed(1)} hPa\nSon veri: ${fmtAge(d.created_at)}` +
@@ -626,7 +646,6 @@
         const x = i  => PAD + (i / (pts.length - 1 || 1)) * (W - 2 * PAD);
         const y = v  => H - PAD - ((v - min) / (max - min)) * (H - 2 * PAD);
 
-        // eksen cizgileri + degerler
         ctx.strokeStyle = "#2a3a55"; ctx.fillStyle = "#7d8db0";
         ctx.font = "24px monospace"; ctx.lineWidth = 1;
         for (let i = 0; i <= 4; i++) {
@@ -635,7 +654,6 @@
           ctx.fillText(v.toFixed(1), 5, yy + 8);
         }
 
-        // sicaklik cizgisi + altinda hafif dolgu
         ctx.beginPath();
         pts.forEach((p, i) => i ? ctx.lineTo(x(i), y(p.t)) : ctx.moveTo(x(0), y(p.t)));
         ctx.strokeStyle = "#ffb703"; ctx.lineWidth = 4; ctx.stroke();
@@ -645,18 +663,15 @@
         ctx.fillStyle = "#8ecae6"; ctx.font = "28px monospace";
         ctx.fillText("Sicaklik gecmisi (son " + pts.length + " olcum, C)", PAD, 40);
 
-        // a-frame dokusunu tazele
         const mesh = document.getElementById("chartPlane").getObject3D("mesh");
         if (mesh && mesh.material.map) mesh.material.map.needsUpdate = true;
-      } catch (e) { /* grafik guncellenemezse paneller calismaya devam etsin */ }
+      } catch (e) {}
     }
 
     function refresh() { updateLive(); updateChart(); }
 
-    // sahne hazir olunca basla, sonra periyodik yenile
     document.querySelector("a-scene").addEventListener("loaded", () => {
       drawFloor();
-      // doseme dokusunu tazele (canvas sahne yuklenince cizildi)
       const floor = document.querySelector('[material*="floorCanvas"]');
       if (floor) {
         const m = floor.getObject3D("mesh");
