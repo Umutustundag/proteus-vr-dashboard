@@ -5,6 +5,7 @@
   <title>Proteus Monitor — VR Lab Dashboard</title>
   <meta name="description" content="ThingSpeak verilerini VR ortaminda gosteren lab paneli" />
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
   <script>
     // VR kumandasiyla yurume: sol analog = hareket (baktigin yone),
     // sag analog saga/sola = ani donus (snap turn). Klavyede WASD calismaya devam eder.
@@ -460,8 +461,19 @@
     document.getElementById("muteBase").addEventListener("click", toggleMute);
     document.getElementById("muteHtmlBtn").addEventListener("click", toggleMute);
 
-    const NTFY_TOPIC = "proteus-lab-lamp-bg42";
+    const NTFY_TOPIC = "proteus-lab-lamp-bg42";        // yedek (Mac koprusu)
+    const MQTT_TOPIC = "proteus/lab/lamp/bg42x9";      // birincil (ESP8266 hub)
+    let mqttClient = null;
+    try {
+      mqttClient = mqtt.connect("wss://broker.emqx.io:8084/mqtt");
+      mqttClient.on("connect", function () { console.log("MQTT bagli"); });
+      mqttClient.on("error", function (e) { console.warn("MQTT hata:", e); });
+    } catch (e) { console.warn("MQTT baslatilamadi:", e); }
+
     function lampCmd(cmd, btnId) {
+      // birincil: MQTT (ESP8266 hub) - anlik, rate-limit yok
+      try { if (mqttClient && mqttClient.connected) mqttClient.publish(MQTT_TOPIC, cmd); } catch (e) {}
+      // yedek: ntfy (Mac koprusu calisiyorsa)
       fetch("https://ntfy.sh/" + NTFY_TOPIC, { method: "POST", body: cmd }).catch(function () {});
       if (btnId) {
         var b = document.getElementById(btnId);
