@@ -86,6 +86,7 @@
     <button id="htmlLampOn"  style="padding:8px 12px;border:none;border-radius:6px;cursor:pointer;background:#1f7a33;color:#fff;">Aç</button>
     <button id="htmlLampOff" style="padding:8px 12px;border:none;border-radius:6px;cursor:pointer;background:#a33333;color:#fff;">Kapat</button>
     <button id="htmlLampAuto" style="padding:8px 12px;border:none;border-radius:6px;cursor:pointer;background:#1c4a7a;color:#fff;">Otomatik</button>
+    <button id="htmlMute" style="padding:8px 12px;border:none;border-radius:6px;cursor:pointer;background:#7a5a1c;color:#fff;">🔇 Alarmı Sustur</button>
     <span id="lampHud" style="color:#5ef2c8; font-size:12px; margin-left:6px;"></span>
   </div>
 
@@ -570,6 +571,7 @@
     document.getElementById("htmlLampOn").addEventListener("click", function () { lampCmd("on"); });
     document.getElementById("htmlLampOff").addEventListener("click", function () { lampCmd("off"); });
     document.getElementById("htmlLampAuto").addEventListener("click", function () { lampCmd("auto"); });
+    document.getElementById("htmlMute").addEventListener("click", function () { lampCmd("sustur"); });
 
     function drawFloor() {
       const cv = document.getElementById("floorCanvas");
