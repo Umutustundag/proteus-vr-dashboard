@@ -92,7 +92,9 @@
            fog="type: linear; color: #dfe3e9; near: 20; far: 40"
            cursor="rayOrigin: mouse" raycaster="objects: .clickable">
     <a-assets>
-      <canvas id="chartCanvas" width="1024" height="512"></canvas>
+      <canvas id="chartCanvasT" width="640" height="340"></canvas>
+      <canvas id="chartCanvasH" width="640" height="340"></canvas>
+      <canvas id="chartCanvasP" width="640" height="340"></canvas>
       <canvas id="floorCanvas" width="512" height="512"></canvas>
     </a-assets>
 
@@ -136,46 +138,54 @@
     <a-box position="0 3.5 -7.93" width="6.6" height="0.55" depth="0.05" color="#11161f"></a-box>
     <a-text value="PROTEUS LAB  -  CANLI ORTAM IZLEME" position="0 3.5 -7.88" align="center"
             color="#5ef2c8" width="9"></a-text>
-    <a-box position="0 2.3 -7.95" width="7.4" height="2.1" depth="0.06" color="#0c1018"></a-box>
+    <!-- buyuk arka pano -->
+    <a-box position="0 2.05 -7.95" width="8.4" height="3.1" depth="0.06" color="#0c1018"></a-box>
 
-    <a-entity position="-2.35 2.3 -7.9">
-      <a-plane width="2.1" height="1.6" color="#ffb703" material="emissive: #ffb703; emissiveIntensity: 0.25"></a-plane>
-      <a-plane width="2.0" height="1.5" position="0 0 0.01" color="#101a30"></a-plane>
-      <a-plane width="2.0" height="0.32" position="0 0.58 0.02" color="#1c2a4a"></a-plane>
-      <a-text value="SICAKLIK" position="0 0.58 0.03" align="center" color="#ffd166" width="4"></a-text>
-      <a-text id="tempVal" value="--.-" position="0 -0.02 0.03" align="center" color="#ffb703" width="9"></a-text>
-      <a-text value="derece C" position="0 -0.55 0.03" align="center" color="#6b7a99" width="2.8"></a-text>
+    <!-- UST SIRA: buyuk anlik sayilar -->
+    <a-entity position="-2.55 2.95 -7.9">
+      <a-plane width="2.2" height="1.2" color="#ffb703" material="emissive: #ffb703; emissiveIntensity: 0.25"></a-plane>
+      <a-plane width="2.1" height="1.1" position="0 0 0.01" color="#101a30"></a-plane>
+      <a-plane width="2.1" height="0.28" position="0 0.41 0.02" color="#1c2a4a"></a-plane>
+      <a-text value="SICAKLIK" position="0 0.41 0.03" align="center" color="#ffd166" width="4"></a-text>
+      <a-text id="tempVal" value="--.-" position="0 -0.05 0.03" align="center" color="#ffb703" width="7.5"></a-text>
+      <a-text value="derece C" position="0 -0.42 0.03" align="center" color="#6b7a99" width="2.6"></a-text>
     </a-entity>
-    <a-entity position="0 2.3 -7.9">
-      <a-plane width="2.1" height="1.6" color="#48cae4" material="emissive: #48cae4; emissiveIntensity: 0.25"></a-plane>
-      <a-plane width="2.0" height="1.5" position="0 0 0.01" color="#101a30"></a-plane>
-      <a-plane width="2.0" height="0.32" position="0 0.58 0.02" color="#163349"></a-plane>
-      <a-text value="NEM" position="0 0.58 0.03" align="center" color="#90e0ef" width="4"></a-text>
-      <a-text id="humVal" value="--.-" position="0 -0.02 0.03" align="center" color="#48cae4" width="9"></a-text>
-      <a-text value="% bagil nem" position="0 -0.55 0.03" align="center" color="#6b7a99" width="2.8"></a-text>
+    <a-entity position="0 2.95 -7.9">
+      <a-plane width="2.2" height="1.2" color="#48cae4" material="emissive: #48cae4; emissiveIntensity: 0.25"></a-plane>
+      <a-plane width="2.1" height="1.1" position="0 0 0.01" color="#101a30"></a-plane>
+      <a-plane width="2.1" height="0.28" position="0 0.41 0.02" color="#163349"></a-plane>
+      <a-text value="NEM" position="0 0.41 0.03" align="center" color="#90e0ef" width="4"></a-text>
+      <a-text id="humVal" value="--.-" position="0 -0.05 0.03" align="center" color="#48cae4" width="7.5"></a-text>
+      <a-text value="% bagil nem" position="0 -0.42 0.03" align="center" color="#6b7a99" width="2.6"></a-text>
     </a-entity>
-    <a-entity position="2.35 2.3 -7.9">
-      <a-plane width="2.1" height="1.6" color="#b5e48c" material="emissive: #b5e48c; emissiveIntensity: 0.25"></a-plane>
-      <a-plane width="2.0" height="1.5" position="0 0 0.01" color="#101a30"></a-plane>
-      <a-plane width="2.0" height="0.32" position="0 0.58 0.02" color="#27411f"></a-plane>
-      <a-text value="BASINC" position="0 0.58 0.03" align="center" color="#d8f3a3" width="4"></a-text>
-      <a-text id="presVal" value="----" position="0 -0.02 0.03" align="center" color="#b5e48c" width="7"></a-text>
-      <a-text value="hPa" position="0 -0.55 0.03" align="center" color="#6b7a99" width="2.8"></a-text>
+    <a-entity position="2.55 2.95 -7.9">
+      <a-plane width="2.2" height="1.2" color="#b5e48c" material="emissive: #b5e48c; emissiveIntensity: 0.25"></a-plane>
+      <a-plane width="2.1" height="1.1" position="0 0 0.01" color="#101a30"></a-plane>
+      <a-plane width="2.1" height="0.28" position="0 0.41 0.02" color="#27411f"></a-plane>
+      <a-text value="BASINC" position="0 0.41 0.03" align="center" color="#d8f3a3" width="4"></a-text>
+      <a-text id="presVal" value="----" position="0 -0.05 0.03" align="center" color="#b5e48c" width="6"></a-text>
+      <a-text value="hPa" position="0 -0.42 0.03" align="center" color="#6b7a99" width="2.6"></a-text>
     </a-entity>
-    <a-box position="0 1.12 -7.93" width="7.0" height="0.28" depth="0.04" color="#0d1322"></a-box>
+
+    <!-- ALT SIRA: 3 gecmis grafigi (sayilarin altinda, renk eslesmeli) -->
+    <a-text value="GECMIS GRAFIKLER (son olcumler)" position="0 2.22 -7.89" align="center" color="#5ef2c8" width="4.2"></a-text>
+    <a-box position="-2.55 1.5 -7.93" width="2.2" height="1.18" depth="0.04" color="#0d1322"></a-box>
+    <a-plane id="chartPlaneT" position="-2.55 1.5 -7.9" width="2.1" height="1.08" material="src: #chartCanvasT; shader: flat"></a-plane>
+    <a-box position="0 1.5 -7.93" width="2.2" height="1.18" depth="0.04" color="#0d1322"></a-box>
+    <a-plane id="chartPlaneH" position="0 1.5 -7.9" width="2.1" height="1.08" material="src: #chartCanvasH; shader: flat"></a-plane>
+    <a-box position="2.55 1.5 -7.93" width="2.2" height="1.18" depth="0.04" color="#0d1322"></a-box>
+    <a-plane id="chartPlaneP" position="2.55 1.5 -7.9" width="2.1" height="1.08" material="src: #chartCanvasP; shader: flat"></a-plane>
+
+    <!-- durum bandi -->
+    <a-box position="0 0.82 -7.93" width="7.8" height="0.3" depth="0.04" color="#0d1322"></a-box>
     <a-text id="statusTxt" value="ThingSpeak verisi bekleniyor..."
-            position="0 1.12 -7.89" align="center" color="#90a0c0" width="4.4" wrap-count="74"></a-text>
+            position="0 0.82 -7.89" align="center" color="#90a0c0" width="4.6" wrap-count="78"></a-text>
 
-    <!-- uzak duvar: beyaz tahta (sag) + grafik (sol) -->
-    <a-box position="4.0 2.3 -7.92" width="1.5" height="1.2" depth="0.04" color="#fbfcfe"></a-box>
-    <a-box position="4.0 2.3 -7.93" width="1.6" height="1.3" depth="0.03" color="#aab1bd"></a-box>
-    <a-text value="LAB NOTLARI:\n- BME280 @ 0x76\n- ThingSpeak 2606541\n- 2.4 GHz WiFi" position="4.0 2.4 -7.89"
-            align="center" color="#2a3854" width="2.0"></a-text>
-
-    <a-box position="-4.0 2.3 -7.93" width="1.7" height="1.1" depth="0.06" color="#0d1322"></a-box>
-    <a-plane id="chartPlane" position="-4.0 2.3 -7.9" width="1.6" height="0.95"
-             material="src: #chartCanvas; shader: flat"></a-plane>
-    <a-text value="VERI GECMISI" position="-4.0 2.95 -7.89" align="center" color="#5ef2c8" width="2.6"></a-text>
+    <!-- beyaz tahta (sol duvara tasindi) -->
+    <a-box position="-4.93 2.0 2.5" rotation="0 90 0" width="2.0" height="1.3" depth="0.04" color="#fbfcfe"></a-box>
+    <a-box position="-4.94 2.0 2.5" rotation="0 90 0" width="2.1" height="1.4" depth="0.03" color="#aab1bd"></a-box>
+    <a-text value="LAB NOTLARI:\n- BME280 @ 0x76\n- ThingSpeak 2606541\n- 2.4 GHz WiFi" position="-4.89 2.1 2.5"
+            rotation="0 90 0" align="center" color="#2a3854" width="2.4"></a-text>
 
     <!-- =========== SOL ADA TEZGAHI (x=-1.6, z=-6..+3) =========== -->
     <a-box position="-1.6 0.9 -1.5" width="1.1" height="0.06" depth="9" color="#f4f6f9" material="roughness:0.4"></a-box>
@@ -262,14 +272,14 @@
     <a-box position="-1.45 1.05 1.75" width="0.6" height="0.24" depth="0.05" rotation="-12 0 0" color="#0e2438"></a-box>
     <a-text id="miniLcd" value="--.- C  --%" position="-1.45 1.05 1.78" rotation="-12 0 0" align="center" color="#7CFC00" width="1.4"></a-text>
     <!-- Proteus monitoru (girise donuk) -->
-    <a-entity position="-1.55 1.32 2.0" rotation="0 18 0">
-      <a-box width="0.78" height="0.5" depth="0.04" color="#11151f"></a-box>
-      <a-plane id="pcScreen" width="0.7" height="0.42" position="0 0 0.025" color="#04121e"
-               material="emissive: #0a2a40; emissiveIntensity: 0.6"></a-plane>
-      <a-text id="screenTxt" value="baglaniyor..." position="-0.31 0.05 0.03" align="left"
-              color="#5ef2c8" width="1.7" white-space="pre"></a-text>
-      <a-cylinder radius="0.035" height="0.16" position="0 -0.32 0" color="#2a3349"></a-cylinder>
-      <a-box width="0.3" height="0.02" depth="0.18" position="0 -0.4 0" color="#2a3349"></a-box>
+    <a-entity position="-1.55 1.42 2.0" rotation="0 18 0">
+      <a-box width="1.06" height="0.66" depth="0.04" color="#11151f"></a-box>
+      <a-plane id="pcScreen" width="0.98" height="0.58" position="0 0 0.025" color="#06182a"
+               material="emissive: #0a3050; emissiveIntensity: 0.55"></a-plane>
+      <a-text id="screenTxt" value="baglaniyor..." position="-0.45 0.18 0.03" align="left"
+              color="#5ef2c8" width="1.15" white-space="pre" wrap-count="22"></a-text>
+      <a-cylinder radius="0.04" height="0.2" position="0 -0.42 0" color="#2a3349"></a-cylinder>
+      <a-box width="0.36" height="0.02" depth="0.2" position="0 -0.52 0" color="#2a3349"></a-box>
     </a-entity>
     <!-- alarm susturma butonu -->
     <a-entity position="-1.95 0.95 2.1">
@@ -538,44 +548,60 @@
       }
     }
 
-    async function updateChart() {
+    // tek bir grafik ciz (canvas + a-frame plane)
+    function drawChart(canvasId, planeId, vals, label, unit, color) {
+      const cv = document.getElementById(canvasId);
+      const ctx = cv.getContext("2d");
+      const W = cv.width, H = cv.height, PAD = 46;
+      ctx.fillStyle = "#0c1322"; ctx.fillRect(0, 0, W, H);
+      if (vals.length) {
+        let min = Math.min(...vals), max = Math.max(...vals);
+        const span = (max - min) || 1; min -= span * 0.15; max += span * 0.15;
+        const x = i => PAD + (i / (vals.length - 1 || 1)) * (W - 2 * PAD);
+        const y = v => H - PAD - ((v - min) / (max - min)) * (H - 2 * PAD);
+        // izgara + eksen degerleri
+        ctx.strokeStyle = "#243049"; ctx.fillStyle = "#8aa0c0";
+        ctx.font = "17px monospace"; ctx.lineWidth = 1;
+        for (let i = 0; i <= 3; i++) {
+          const v = min + (i / 3) * (max - min), yy = y(v);
+          ctx.beginPath(); ctx.moveTo(PAD, yy); ctx.lineTo(W - PAD, yy); ctx.stroke();
+          ctx.fillText(v.toFixed(1), 4, yy + 5);
+        }
+        // cizgi + altinda dolgu
+        ctx.beginPath();
+        vals.forEach((v, i) => i ? ctx.lineTo(x(i), y(v)) : ctx.moveTo(x(0), y(v)));
+        ctx.strokeStyle = color; ctx.lineWidth = 3.5; ctx.lineJoin = "round"; ctx.stroke();
+        ctx.lineTo(x(vals.length - 1), H - PAD); ctx.lineTo(x(0), H - PAD); ctx.closePath();
+        ctx.globalAlpha = 0.16; ctx.fillStyle = color; ctx.fill(); ctx.globalAlpha = 1;
+        // son deger (sag ust)
+        ctx.fillStyle = "#eef3fb"; ctx.font = "bold 30px monospace"; ctx.textAlign = "right";
+        ctx.fillText(vals[vals.length - 1].toFixed(1), W - 10, 34); ctx.textAlign = "left";
+      }
+      // baslik (sol ust)
+      ctx.fillStyle = color; ctx.font = "bold 22px monospace";
+      ctx.fillText(label + " (" + unit + ")", PAD, 30);
+      const mesh = document.getElementById(planeId).getObject3D("mesh");
+      if (mesh && mesh.material.map) mesh.material.map.needsUpdate = true;
+    }
+
+    async function updateCharts() {
       try {
         const r = await fetch(historyUrl);
         const d = await r.json();
-        const pts = d.feeds.map(f => ({ t: parseFloat(f.field1), at: f.created_at })).filter(p => !isNaN(p.t));
-        if (!pts.length) return;
-
-        const cv  = document.getElementById("chartCanvas");
-        const ctx = cv.getContext("2d");
-        const W = cv.width, H = cv.height, PAD = 70;
-        ctx.fillStyle = "#101828"; ctx.fillRect(0, 0, W, H);
-
-        const vals = pts.map(p => p.t);
-        const min = Math.min(...vals) - 0.5, max = Math.max(...vals) + 0.5;
-        const x = i  => PAD + (i / (pts.length - 1 || 1)) * (W - 2 * PAD);
-        const y = v  => H - PAD - ((v - min) / (max - min)) * (H - 2 * PAD);
-
-        ctx.strokeStyle = "#2a3a55"; ctx.fillStyle = "#7d8db0";
-        ctx.font = "24px monospace"; ctx.lineWidth = 1;
-        for (let i = 0; i <= 4; i++) {
-          const v = min + (i / 4) * (max - min), yy = y(v);
-          ctx.beginPath(); ctx.moveTo(PAD, yy); ctx.lineTo(W - PAD, yy); ctx.stroke();
-          ctx.fillText(v.toFixed(1), 5, yy + 8);
-        }
-        ctx.beginPath();
-        pts.forEach((p, i) => i ? ctx.lineTo(x(i), y(p.t)) : ctx.moveTo(x(0), y(p.t)));
-        ctx.strokeStyle = "#ffb703"; ctx.lineWidth = 4; ctx.stroke();
-        ctx.lineTo(x(pts.length - 1), H - PAD); ctx.lineTo(x(0), H - PAD); ctx.closePath();
-        ctx.fillStyle = "rgba(255, 183, 3, 0.12)"; ctx.fill();
-        ctx.fillStyle = "#8ecae6"; ctx.font = "28px monospace";
-        ctx.fillText("Sicaklik gecmisi (son " + pts.length + " olcum, C)", PAD, 40);
-
-        const mesh = document.getElementById("chartPlane").getObject3D("mesh");
-        if (mesh && mesh.material.map) mesh.material.map.needsUpdate = true;
+        const T = [], H = [], P = [];
+        d.feeds.forEach(f => {
+          const a = parseFloat(f.field1), b = parseFloat(f.field2), c = parseFloat(f.field3);
+          if (!isNaN(a)) T.push(a);
+          if (!isNaN(b)) H.push(b);
+          if (!isNaN(c)) P.push(c);
+        });
+        drawChart("chartCanvasT", "chartPlaneT", T, "SICAKLIK", "C",   "#ffb703");
+        drawChart("chartCanvasH", "chartPlaneH", H, "NEM", "%",        "#48cae4");
+        drawChart("chartCanvasP", "chartPlaneP", P, "BASINC", "hPa",   "#b5e48c");
       } catch (e) {}
     }
 
-    function refresh() { updateLive(); updateChart(); }
+    function refresh() { updateLive(); updateCharts(); }
 
     document.querySelector("a-scene").addEventListener("loaded", () => {
       drawFloor();
