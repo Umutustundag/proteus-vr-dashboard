@@ -476,14 +476,30 @@
     const MQTT_TOPIC = "proteus/lab/lamp/bg42x9";      // birincil (ESP8266 hub)
     let mqttClient = null;
     try {
-      mqttClient = mqtt.connect("wss://broker.emqx.io:8084/mqtt");
-      mqttClient.on("connect", function () { console.log("MQTT bagli"); });
-      mqttClient.on("error", function (e) { console.warn("MQTT hata:", e); });
+      mqttClient = mqtt.connect("wss://broker.emqx.io:8084/mqtt", {
+        keepalive: 30, reconnectPeriod: 2000, connectTimeout: 8000, clean: true
+      });
+      mqttClient.on("connect",   function () { console.log("MQTT bagli"); });
+      mqttClient.on("reconnect", function () { console.log("MQTT yeniden baglaniyor..."); });
+      mqttClient.on("offline",   function () { console.warn("MQTT cevrimdisi"); });
+      mqttClient.on("error",     function (e) { console.warn("MQTT hata:", e); });
     } catch (e) { console.warn("MQTT baslatilamadi:", e); }
+    // sayfa tekrar one gelince (arka plandan donunce) baglantiyi tazele
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden && mqttClient && !mqttClient.connected) {
+        try { mqttClient.reconnect(); } catch (e) {}
+      }
+    });
 
     function lampCmd(cmd, btnId) {
-      // birincil: MQTT (ESP8266 hub) - anlik, rate-limit yok
-      try { if (mqttClient && mqttClient.connected) mqttClient.publish(MQTT_TOPIC, cmd); } catch (e) {}
+      // birincil: MQTT (ESP8266 hub). Bagliysa hemen, degilse yeniden baglan + tekrar dene
+      if (mqttClient) {
+        try { mqttClient.publish(MQTT_TOPIC, cmd); } catch (e) {}
+        if (!mqttClient.connected) {
+          try { mqttClient.reconnect(); } catch (e) {}
+          setTimeout(function () { try { mqttClient.publish(MQTT_TOPIC, cmd); } catch (e) {} }, 900);
+        }
+      }
       // yedek: ntfy (Mac koprusu calisiyorsa)
       fetch("https://ntfy.sh/" + NTFY_TOPIC, { method: "POST", body: cmd }).catch(function () {});
       if (btnId) {
