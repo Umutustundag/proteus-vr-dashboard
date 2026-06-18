@@ -43,7 +43,8 @@
         if (!cam) return;
         var dt = (delta || 16) / 1000;
 
-        cam.getWorldDirection(this._dir);
+        cam.getWorldDirection(this._dir); // +Z dondurur = kamera GERIYE; gercek ileri icin ters cevir
+        this._dir.negate();
         this._dir.y = 0;
         if (this._dir.lengthSq() < 1e-4) return;
         this._dir.normalize();
