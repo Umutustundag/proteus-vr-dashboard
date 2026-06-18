@@ -473,17 +473,53 @@
     document.getElementById("muteHtmlBtn").addEventListener("click", toggleMute);
 
     const NTFY_TOPIC = "proteus-lab-lamp-bg42";        // yedek (Mac koprusu)
-    const MQTT_TOPIC = "proteus/lab/lamp/bg42x9";      // birincil (ESP8266 hub)
+    const MQTT_TOPIC  = "proteus/lab/lamp/bg42x9";        // birincil (ESP8266 hub)
+    const MQTT_STATUS = "proteus/lab/lamp/bg42x9/status"; // ESP online/offline (retained + heartbeat)
+    const MQTT_ACK    = "proteus/lab/lamp/bg42x9/ack";    // ESP komut onayi (geri bildirim)
     let mqttClient = null;
+    let espOnline  = false;   // ESP gercekten broker'a bagli mi (status/heartbeat'ten)
+    let ackPending = null;    // {cmd, tries, timer} - ACK bekleyen komut
+
+    // Sag ustte ESP online/offline rozeti (teshis icin) - 2D goruntude gorunur
+    function setEspStatus(on) {
+      espOnline = on;
+      var d = document.getElementById("espStatusHud");
+      if (!d) {
+        d = document.createElement("div");
+        d.id = "espStatusHud";
+        d.style.cssText = "position:fixed;top:8px;right:10px;z-index:9999;font:bold 13px sans-serif;padding:4px 9px;border-radius:6px;background:rgba(0,0,0,0.55)";
+        document.body.appendChild(d);
+      }
+      d.textContent = "ESP: " + (on ? "● online" : "○ offline");
+      d.style.color = on ? "#37e07a" : "#ff6a6a";
+      console.log("ESP durumu:", on ? "online" : "offline");
+    }
+
     try {
       mqttClient = mqtt.connect("wss://broker.emqx.io:8084/mqtt", {
         keepalive: 30, reconnectPeriod: 2000, connectTimeout: 8000, clean: true
       });
-      mqttClient.on("connect",   function () { console.log("MQTT bagli"); });
+      mqttClient.on("connect", function () {
+        console.log("MQTT bagli");
+        try { mqttClient.subscribe(MQTT_STATUS); mqttClient.subscribe(MQTT_ACK); } catch (e) {}
+      });
       mqttClient.on("reconnect", function () { console.log("MQTT yeniden baglaniyor..."); });
       mqttClient.on("offline",   function () { console.warn("MQTT cevrimdisi"); });
       mqttClient.on("error",     function (e) { console.warn("MQTT hata:", e); });
+      mqttClient.on("message", function (topic, payload) {
+        var msg = payload.toString();
+        if (topic === MQTT_STATUS) {
+          setEspStatus(msg === "online");
+        } else if (topic === MQTT_ACK) {
+          // ESP komutu aldi -> bekleyen retry'yi durdur
+          if (ackPending && msg === ackPending.cmd) { clearTimeout(ackPending.timer); ackPending = null; }
+          var hud = document.getElementById("lampHud");
+          if (hud) { hud.textContent = "Lamba onayladi: " + msg.toUpperCase();
+            setTimeout(function () { hud.textContent = ""; }, 1500); }
+        }
+      });
     } catch (e) { console.warn("MQTT baslatilamadi:", e); }
+
     // sayfa tekrar one gelince (arka plandan donunce) baglantiyi tazele
     document.addEventListener("visibilitychange", function () {
       if (!document.hidden && mqttClient && !mqttClient.connected) {
@@ -491,14 +527,31 @@
       }
     });
 
-    function lampCmd(cmd, btnId) {
-      // birincil: MQTT (ESP8266 hub). Bagliysa hemen, degilse yeniden baglan + tekrar dene
-      if (mqttClient) {
-        try { mqttClient.publish(MQTT_TOPIC, cmd); } catch (e) {}
-        if (!mqttClient.connected) {
-          try { mqttClient.reconnect(); } catch (e) {}
-          setTimeout(function () { try { mqttClient.publish(MQTT_TOPIC, cmd); } catch (e) {} }, 900);
+    // ACK gelene kadar komutu tekrar gonder. 'connected'a korlemesine guvenmeyiz:
+    // ESP veya tarayici WSS'i yari-olu olsa bile komut kaybolmaz, ACK gelince durur.
+    function attemptSend() {
+      if (!ackPending || !mqttClient) return;
+      if (!mqttClient.connected) { try { mqttClient.reconnect(); } catch (e) {} }
+      try { mqttClient.publish(MQTT_TOPIC, ackPending.cmd); } catch (e) {}
+      ackPending.tries++;
+      clearTimeout(ackPending.timer);
+      ackPending.timer = setTimeout(function () {
+        if (!ackPending) return;                      // bu arada ACK geldiyse temizlenmistir
+        if (ackPending.tries < 4) { attemptSend(); }  // ACK yok -> tekrar dene (zorla reconnect dahil)
+        else {
+          var hud = document.getElementById("lampHud");
+          if (hud) hud.textContent = "Lamba yanit vermedi (ESP " + (espOnline ? "online" : "offline") + ")";
+          ackPending = null;
         }
+      }, 1200);
+    }
+
+    function lampCmd(cmd, btnId) {
+      // birincil: MQTT + ACK'li retry (ESP onaylayana kadar, en fazla 4 deneme)
+      if (mqttClient) {
+        if (ackPending) clearTimeout(ackPending.timer);
+        ackPending = { cmd: cmd, tries: 0, timer: null };
+        attemptSend();
       }
       // yedek: ntfy (Mac koprusu calisiyorsa)
       fetch("https://ntfy.sh/" + NTFY_TOPIC, { method: "POST", body: cmd }).catch(function () {});
@@ -509,7 +562,7 @@
       }
       var hud = document.getElementById("lampHud");
       if (hud) { hud.textContent = "Lamba komutu: " + cmd.toUpperCase();
-        setTimeout(function () { hud.textContent = ""; }, 2000); }
+        setTimeout(function () { if (hud.textContent.indexOf("komutu") >= 0) hud.textContent = ""; }, 2000); }
     }
     document.getElementById("lampOn").addEventListener("click", function () { lampCmd("on", "lampOn"); });
     document.getElementById("lampOff").addEventListener("click", function () { lampCmd("off", "lampOff"); });
